@@ -12,7 +12,7 @@ class ItemView {
 }
 const originalLoad = Module._load;
 Module._load = function (id, ...args) {
-  return id === "obsidian" ? { ItemView, TFile, MarkdownView } : originalLoad.call(this, id, ...args);
+  return id === "obsidian" ? { ItemView, TFile, MarkdownView, Notice: class {} } : originalLoad.call(this, id, ...args);
 };
 const { markdownTree, editMarkdownNode, MindMapView, layoutTree, wrapLabel } = require("../mindmap");
 Module._load = originalLoad;
@@ -162,4 +162,86 @@ test("根节点重命名保留笔记所在目录，并拒绝目录穿越", async
   await f.view.saveNodeEdit({ id: "0" }, "新名称", undefined, f.snapshot);
   assert.equal(renamed, "项目/新名称.md");
   assert.equal(f.view.sourcePath, renamed);
+});
+
+const { imageContent, insertMarkdownNodes } = require("../mindmap-content");
+
+test("图片语法提取保留正文及多个图片，尺寸参数不作为说明", () => {
+  const media = imageContent('正文 ![[附件/图.png|200x100]] ![说明](<附件/第二 图.jpg>) <img src="a.webp" alt="图">');
+  assert.equal(media.text, "正文");
+  assert.deepEqual(media.images.map(image => image.target), ["附件/图.png", "附件/第二 图.jpg", "a.webp"]);
+  assert.equal(media.images[0].alt, "");
+  const tree = markdownTree("![[一.png]]\n![[二.png]]\n- 分支\n  - ![[三.png]]", "文件");
+  assert.equal(tree.root.children.length, 3);
+  assert.equal(tree.root.children[2].children[0].images[0].target, "三.png");
+  const layout = layoutTree(tree.root);
+  assert.equal(layout.nodes[1].thumbnails.length, 1);
+  assert.ok(layout.nodes[1].height > 100);
+});
+
+test("新增标题子节点和同级节点保留其他章节、代码与 YAML", () => {
+  const text = "---\r\ntags: [工作]\r\n---\r\n# A\r\n```js\r\nconst a = 1;\r\n```\r\n## 已有\r\n- 内容\r\n# B";
+  const root = markdownTree(text, "文件").root;
+  const added = insertMarkdownNodes(text, root, root.children[0].id, "child", ["新增"]);
+  assert.equal(added.text, text.replace("# B", "## 新增\r\n# B"));
+  const sibling = insertMarkdownNodes(text, root, root.children[0].id, "sibling", ["同级"]);
+  assert.equal(sibling.text, text.replace("# B", "# 同级\r\n# B"));
+  const image = insertMarkdownNodes(text, root, root.children[0].id, "child", ["![[图.png]]"], true);
+  assert.equal(markdownTree(image.text, "文件").root.children[0].children[0].images[0].target, "图.png");
+});
+
+test("列表、段落、下划线标题和 EOF 新节点能再次解析为目标关系", () => {
+  for (const text of ["1. 父\n   - 原子", "正文\n连续正文", "标题\n===", "\uFEFF- 父", "###### 标题"]) {
+    const root = markdownTree(text, "文件").root;
+    const update = insertMarkdownNodes(text, root, root.children[0].id, "child", ["新增"]);
+    const parsed = markdownTree(update.text, "文件").root;
+    assert.ok(parsed.children[0].children.some(child => child.label === "新增"), update.text);
+    assert.ok(update.text.startsWith("\uFEFF") === text.startsWith("\uFEFF"));
+    assert.ok(parsed.children[0].children.some(child => child.source.startLine === update.selectedLine));
+  }
+  const empty = insertMarkdownNodes("", markdownTree("", "文件").root, "0", "child", ["开始"]);
+  assert.equal(empty.text, "- 开始\n");
+});
+
+test("新增节点保存入口拒绝冲突并立即更新图片引用基线", async () => {
+  const f = editingFixture("# 标题\n");
+  const root = markdownTree(f.snapshot.text, "文件").root;
+  const update = insertMarkdownNodes(f.snapshot.text, root, "0", "child", ["![[图.png]]"], true);
+  const snapshots = new Map();
+  f.view.plugin.images = { snapshots, resolveLinks: () => new Set(["图.png"]) };
+  await f.view.writeSource(f.snapshot, update);
+  assert.equal(f.getDocument(), update.text);
+  assert.ok(snapshots.get(f.file.path).has("图.png"));
+  await assert.rejects(f.view.writeSource(f.snapshot, update), /原文已有新修改/);
+});
+
+test("导图多图部分失败仍插入成功文件，写回冲突时保留文件", async () => {
+  const f = editingFixture("# 标题\n");
+  f.view.sourceText = f.snapshot.text;
+  f.view.tree = markdownTree(f.snapshot.text, "文件");
+  f.view.selectNode = () => {};
+  f.view.plugin.settings = { imageFolder: "附件" };
+  f.view.plugin.enqueue = work => work();
+  f.view.plugin.ensureFolder = async () => {};
+  f.view.app.fileManager = { generateMarkdownLink: file => "[[" + file.path + "]]" };
+  let count = 0;
+  f.view.plugin.images = {
+    extensionFor: () => "png", snapshots: new Map(), resolveLinks: () => new Set(["附件/文件-01.png"]),
+    saveImage: async () => { if (count++) throw Error("导入失败"); return { path: "附件/文件-01.png" }; }
+  };
+  await assert.rejects(f.view.importImages([{}, {}]), /导入失败/);
+  assert.ok(f.getDocument().includes("![[附件/文件-01.png]]"));
+  f.setDocument(f.snapshot.text);
+  f.view.plugin.images.saveImage = async () => { f.setDocument("外部修改"); return { path: "附件/保留.png" }; };
+  await assert.rejects(f.view.importImages([{}]), /原文已有新修改/);
+  assert.equal(f.getDocument(), "外部修改");
+});
+
+
+test("新增节点不会静默写入未闭合代码块中", async () => {
+  const f = editingFixture("# 标题\n```js\nconst a = 1;");
+  const root = markdownTree(f.snapshot.text, "文件").root;
+  const update = insertMarkdownNodes(f.snapshot.text, root, "0", "child", ["新增"]);
+  await assert.rejects(f.view.writeSource(f.snapshot, update), /新增节点无法显示/);
+  assert.equal(f.getDocument(), f.snapshot.text);
 });

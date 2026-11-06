@@ -50,8 +50,8 @@
 .nc-map-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; flex: 0 0 auto; }
 .nc-map-title { margin-inline-end: auto; font-weight: var(--font-semibold); max-width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nc-map-toolbar button { font-size: var(--font-smallest); }
-.nc-map-stage { flex: 1; min-height: 120px; overflow: hidden; border: 1px solid var(--background-modifier-border); border-radius: 10px; background-color: var(--background-primary); background-image: radial-gradient(var(--background-modifier-border) 1px, transparent 1px); background-size: 20px 20px; cursor: grab; touch-action: none; user-select: none; }
-.nc-map-stage:active { cursor: grabbing; }
+.nc-map-stage { flex: 1; min-height: 120px; overflow: hidden; border: 1px solid var(--background-modifier-border); border-radius: 10px; background-color: var(--background-primary); background-image: radial-gradient(var(--background-modifier-border) 1px, transparent 1px); background-size: 20px 20px; cursor: default; touch-action: none; user-select: none; }
+.nc-map-stage.is-panning { cursor: grabbing; }
 .nc-map-stage svg { display: block; }
 .nc-map-edge { fill: none; stroke-width: 2; opacity: 0.65; }
 .nc-map-box { fill: var(--background-secondary); stroke-width: 1.5; }
@@ -65,3 +65,8 @@
 .nc-map-edit-input { width: 100%; resize: vertical; }
 .nc-map-edit-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .nc-map-task-toggle { display: flex; gap: 8px; align-items: center; }
+
+.nc-map-image-frame { fill: var(--background-primary); stroke: var(--background-modifier-border); stroke-width: 2; }
+.nc-map-image { pointer-events: none; }
+.nc-map-root { fill: var(--interactive-accent); }
+.nc-map-node:has(.nc-map-root) .nc-map-label { fill: var(--text-on-accent); }

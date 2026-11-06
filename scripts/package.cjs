@@ -17,7 +17,7 @@ const license = fs.readFileSync(path.join(root, "LICENSE"), "utf8");
 const output = path.join(root, "dist", "note-companion");
 fs.mkdirSync(output, { recursive: true });
 // 生成单一 CommonJS 入口，适配桌面和移动端 Obsidian 的插件加载器。
-const modules = ["i18n", "core", "images", "assistant", "mindmap", "main"].map(name => {
+const modules = ["i18n", "core", "images", "assistant", "mindmap-content", "mindmap", "main"].map(name => {
   const source = fs.readFileSync(path.join(root, name + ".js"), "utf8");
   return `${JSON.stringify("./" + name)}: function(module, exports, require) {\n${source}\n}`;
 });

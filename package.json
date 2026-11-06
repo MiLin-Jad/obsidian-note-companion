@@ -1,12 +1,12 @@
 {
   "name": "obsidian-note-companion",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "license": "MIT",
   "private": true,
   "description": "图片管理与使用 Markdown 记忆的只读笔记 AI 助手",
   "main": "main.js",
   "scripts": {
-    "check": "node --check main.js && node --check core.js && node --check images.js && node --check assistant.js && node --check mindmap.js && node --check i18n.js",
+    "check": "node --check main.js && node --check core.js && node --check images.js && node --check assistant.js && node --check mindmap-content.js && node --check mindmap.js && node --check i18n.js",
     "test": "node --test tests/*.test.cjs",
     "build": "npm run check && npm test && node scripts/package.cjs"
   },

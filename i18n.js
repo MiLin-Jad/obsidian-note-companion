@@ -1,6 +1,20 @@
 "use strict";
 
 const ENGLISH = {
+  "新增节点无法显示，请检查原文中未闭合的代码块或节点数量限制。": "The new node cannot be displayed. Check for unclosed code fences or the node limit.",
+  "子节点": "Child",
+  "同级节点": "Sibling",
+  "图片": "Image",
+  "选择图片": "Choose images",
+  "新增子节点": "Add child node",
+  "新增同级节点": "Add sibling node",
+  "请输入单行节点内容。": "Enter a single line of node content.",
+  "请选择支持的图片格式。": "Choose a supported image format.",
+  "图片已保留，请从以下位置手动插入。": "Images were preserved. Insert them manually from these locations.",
+  "图片无法加载": "Image unavailable",
+  "，双击或按 F2 编辑": ", double-click or press F2 to edit",
+  "思维导图，右键拖动平移，双击节点编辑，Tab 新增子节点，Enter 新增同级节点": "Mind map. Right-drag to pan, double-click to edit, Tab to add a child, Enter to add a sibling.",
+
   "笔记伴侣": "Note Journal Companion",
   "AI 助手": "AI Assistant",
   "思维导图": "Mind map",
