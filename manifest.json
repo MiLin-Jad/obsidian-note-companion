@@ -1,9 +1,9 @@
 {
   "id": "note-companion",
-  "name": "笔记伴侣",
-  "version": "0.1.6",
+  "name": "Note Journal Companion",
+  "version": "0.1.7",
   "minAppVersion": "1.5.0",
-  "description": "图片自动命名与清理、后缀配色、Markdown 思维导图，以及拥有 Markdown 记忆的日志式 AI 助手。",
+  "description": "Manage pasted images, edit Markdown mind maps, and track progress with an AI assistant using local Markdown memory.",
   "author": "Anid",
   "isDesktopOnly": false
 }

@@ -17,11 +17,11 @@ test("动态提示双向翻译，保持路径、计数和 HTTP 状态", () => {
   assert.equal(t("en", "本次读取 3/12 篇笔记，内容已截取。"), "Read 3/12 notes. Content truncated.");
   assert.equal(t("en", "正在回复 · 已读取 2/5 篇笔记 · 内容已截取"), "Responding · Read 2/5 notes · Content truncated");
   assert.equal(t("zh", "Responding · Read 2/5 notes · Content truncated"), "正在回复 · 已读取 2/5 篇笔记 · 内容已截取");
-  assert.equal(t("en", "笔记伴侣：节点内容不能为空。"), "Note Companion: Node content cannot be empty.");
+  assert.equal(t("en", "笔记伴侣：节点内容不能为空。"), "Note Journal Companion: Node content cannot be empty.");
   assert.equal(t("en", "图片已保存到 90-附件/图片/测试-01.png，笔记已切换，请手动插入。"),
     "Image saved to 90-附件/图片/测试-01.png. The note has changed. Insert the image manually.");
   assert.equal(t("en", "笔记伴侣：3 张已移除引用的图片已移入笔记库回收站。"),
-    "Note Companion: 3 unreferenced images moved to the vault trash.");
+    "Note Journal Companion: 3 unreferenced images moved to the vault trash.");
   assert.equal(t("en", "接口返回 HTTP 401，请检查配置、额度和模型名称。"),
     "The API returned HTTP 401. Check configuration, credit and model name.");
 });
@@ -59,7 +59,7 @@ test("语言设置持久化并即时更新命令，不重新打开视图或清�
   await plugin.setLanguage("en");
   assert.equal(stored.language, "en");
   assert.equal(stored.imageFolder, "90-附件/图片");
-  assert.equal(command.name, "Note Companion: Update progress");
+  assert.equal(command.name, "Note Journal Companion: Update progress");
   assert.equal(view.inputEl.value, "尚未发送的消息");
   await plugin.setLanguage("zh");
   assert.equal(command.name, "笔记伴侣: 更新进展");

@@ -1,11 +1,11 @@
-# 笔记伴侣
+# Note Journal Companion（笔记伴侣）
 
 一个小型 Obsidian 插件，整合图片管理、文件后缀配色、可编辑的 Markdown 思维导图与日志式 AI 助手，支持中文和 English。
 
 ## 安装
 
 1. 从 [GitHub Releases](https://github.com/MiLin-Jad/obsidian-note-companion/releases/latest) 下载最新安装包，解压后将 `note-companion` 文件夹完整复制到笔记库的 `.obsidian/plugins/` 下。自行构建时使用 `dist/note-companion`。
-2. 在 Obsidian 的设置 → 第三方插件中启用“笔记伴侣”。复制时 Obsidian 已打开，可重启后刷新插件列表。
+2. 在 Obsidian 的设置 → 第三方插件中启用 **Note Journal Companion**。复制时 Obsidian 已打开，可重启后刷新插件列表。
 3. 点击窗口右上角、标签页下拉按钮旁的机器人图标，打开或收起右侧 AI 助手。
 4. 点击“接口配置”，在自动生成的 `90-附件/Ai助手/配置.md` 中填写接口地址、密钥和模型名称。
 
@@ -88,6 +88,10 @@ npm run build
 该命令进行所有运行文件的语法检查、边界和服务测试，再生成 `dist/note-companion` 安装目录。测试使用 Obsidian API 模拟环境，覆盖图片粘贴、引用保护、清理目录边界、AI 写入边界、接口配置排除与错误处理。
 
 自动化测试使用模拟的 Obsidian API，并通过浏览器验证思维导图的编辑和中英切换。真实 API 服务需要使用者配置后验证。隐藏与配色使用 Obsidian 文件列表的 DOM 选择器，主题或未来版本调整结构后可能需要更新。
+
+## 许可证
+
+本项目采用 [MIT 许可证](LICENSE)。
 
 ## 0.1.1 修复记录
 

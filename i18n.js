@@ -1,7 +1,7 @@
 "use strict";
 
 const ENGLISH = {
-  "笔记伴侣": "Note Companion",
+  "笔记伴侣": "Note Journal Companion",
   "AI 助手": "AI Assistant",
   "思维导图": "Mind map",
   "帮助": "Help",
@@ -143,10 +143,10 @@ const ENGLISH = {
   "助手": "Assistant",
   "无": "None",
   "，内容受长度限制已截取": ", content truncated to fit the limit",
-  "笔记伴侣：{message}": "Note Companion: {message}",
+  "笔记伴侣：{message}": "Note Journal Companion: {message}",
   "{path} 已存在同名文件。": "A file already exists at {path}.",
   "{path} 已存在同名文件夹。": "A folder already exists at {path}.",
-  "笔记伴侣：{count} 张已移除引用的图片已移入笔记库回收站。": "Note Companion: {count} unreferenced images moved to the vault trash.",
+  "笔记伴侣：{count} 张已移除引用的图片已移入笔记库回收站。": "Note Journal Companion: {count} unreferenced images moved to the vault trash.",
   "图片已保存到 {path}，笔记已切换，请手动插入。": "Image saved to {path}. The note has changed. Insert the image manually.",
   "图片已保存到 {path}，原画布已关闭，请手动拖入图片。": "Images saved to {path}. The original canvas has closed. Drag the images onto it manually.",
   "正在回复 · 已读取 {count}/{total} 篇笔记{suffix}": "Responding · Read {count}/{total} notes{suffix}",
