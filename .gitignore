@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.obsidian/
+90-附件/
+data.json
+配置.md
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db

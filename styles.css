@@ -1,0 +1,67 @@
+.nc-assistant-launcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  margin: 0 4px;
+  align-self: center;
+  color: var(--icon-color);
+  border-radius: var(--radius-s);
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+.nc-assistant-launcher:hover { color: var(--icon-color-hover); background: var(--background-modifier-hover); }
+.nc-assistant-launcher:focus-visible { outline: 2px solid var(--interactive-accent); outline-offset: 2px; }
+
+.nc-assistant {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  padding: 16px 12px;
+  overflow: hidden;
+}
+
+.nc-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.nc-header h3 { margin: 0; }
+.nc-header button { font-size: var(--font-smallest); }
+.nc-help { flex-shrink: 0; max-height: 35%; overflow-y: auto; padding: 8px 12px; border-radius: 8px; background: var(--background-secondary); color: var(--text-muted); font-size: var(--font-smallest); line-height: 1.6; }
+.nc-help[hidden] { display: none; }
+.nc-help p { margin: 4px 0; }
+.nc-actions, .nc-shortcuts { display: flex; flex-wrap: wrap; gap: 6px; }
+.nc-actions button, .nc-shortcuts button { font-size: var(--font-smallest); }
+.nc-status { color: var(--text-muted); font-size: var(--font-smallest); line-height: 1.5; }
+.nc-status:empty, .nc-progress:empty, .nc-chat:empty { display: none; }
+.nc-scroll { flex: 1; min-height: 80px; overflow-y: auto; overflow-wrap: anywhere; }
+.nc-progress { padding: 12px; border: 1px solid var(--background-modifier-border); border-radius: 10px; background: var(--background-secondary); }
+.nc-progress h1 { font-size: var(--font-ui-large); margin-top: 0; }
+.nc-progress h2 { font-size: var(--font-ui-medium); margin: 16px 0 8px; }
+.nc-progress ul { padding-inline-start: 20px; }
+.nc-chat { padding: 6px 4px 12px; }
+.nc-chat h2 { font-size: var(--font-ui-medium); border-top: 1px solid var(--background-modifier-border); padding-top: 16px; }
+.nc-chat details { color: var(--text-muted); font-size: var(--font-smallest); }
+.nc-composer { display: flex; align-items: flex-end; gap: 8px; }
+.nc-composer textarea { flex: 1; min-width: 0; resize: vertical; max-height: 200px; }
+.nc-settings:not(.nc-show-help) .setting-item-description { display: none; }
+
+.nc-mindmap { display: flex; flex-direction: column; height: 100%; padding: 12px; gap: 8px; overflow: hidden; }
+.nc-map-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; flex: 0 0 auto; }
+.nc-map-title { margin-inline-end: auto; font-weight: var(--font-semibold); max-width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nc-map-toolbar button { font-size: var(--font-smallest); }
+.nc-map-stage { flex: 1; min-height: 120px; overflow: hidden; border: 1px solid var(--background-modifier-border); border-radius: 10px; background-color: var(--background-primary); background-image: radial-gradient(var(--background-modifier-border) 1px, transparent 1px); background-size: 20px 20px; cursor: grab; touch-action: none; user-select: none; }
+.nc-map-stage:active { cursor: grabbing; }
+.nc-map-stage svg { display: block; }
+.nc-map-edge { fill: none; stroke-width: 2; opacity: 0.65; }
+.nc-map-box { fill: var(--background-secondary); stroke-width: 1.5; }
+.nc-map-label { fill: var(--text-normal); font-family: var(--font-interface); font-size: 13px; pointer-events: none; }
+.nc-map-toggle circle { fill: var(--background-primary); stroke: var(--text-muted); stroke-width: 1; }
+.nc-map-toggle text { fill: var(--text-normal); font-size: 13px; text-anchor: middle; pointer-events: none; }
+.nc-map-toggle:hover circle { stroke: var(--interactive-accent); stroke-width: 2; }
+.nc-map-node { cursor: pointer; outline: none; }
+.nc-map-node:hover .nc-map-box, .nc-map-node:focus-visible .nc-map-box, .nc-map-node.is-selected .nc-map-box { stroke-width: 3; }
+.nc-map-editor { display: flex; flex-direction: column; gap: 12px; }
+.nc-map-edit-input { width: 100%; resize: vertical; }
+.nc-map-edit-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.nc-map-task-toggle { display: flex; gap: 8px; align-items: center; }
