@@ -67,3 +67,32 @@ test("语言设置持久化并即时更新命令，不重新打开视图或清�
   await assert.rejects(plugin.setLanguage("en"), /节点编辑/);
   assert.equal(plugin.settings.language, "zh");
 });
+
+
+test("隐藏图片名称设置持久化，并即时更新 Canvas 样式和导图", async () => {
+  const Plugin = require("../main");
+  const plugin = Object.create(Plugin.prototype);
+  plugin.settings = { imageFolder: "附件", hideMode: "none", extensionColors: "" };
+  plugin.styleElement = { textContent: "" };
+  let stored;
+  let draws = 0;
+  plugin.saveData = async settings => { stored = { ...settings }; };
+  plugin.app = { workspace: { getLeavesOfType: () => [{ view: { draw: () => draws++ } }] } };
+  const originalCss = global.CSS;
+  global.CSS = { escape: value => value };
+  try {
+    await plugin.saveSettings();
+    assert.match(plugin.styleElement.textContent, /canvas-node-label.*display: none/);
+    assert.doesNotMatch(plugin.styleElement.textContent, /markdown-preview/);
+    plugin.settings.hideImageNames = false;
+    await plugin.saveSettings();
+    assert.equal(stored.hideImageNames, false);
+    assert.doesNotMatch(plugin.styleElement.textContent, /canvas-node-label/);
+    assert.equal(draws, 2);
+    plugin.settings.hideImageNames = true;
+    await plugin.saveSettings();
+    assert.equal(stored.hideImageNames, true);
+    assert.match(plugin.styleElement.textContent, /canvas-node-label/);
+    assert.equal(t("en", "隐藏图片名称"), "Hide image names");
+  } finally { global.CSS = originalCss; }
+});

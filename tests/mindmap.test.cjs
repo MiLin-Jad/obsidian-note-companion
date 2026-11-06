@@ -245,3 +245,19 @@ test("新增节点不会静默写入未闭合代码块中", async () => {
   await assert.rejects(f.view.writeSource(f.snapshot, update), /新增节点无法显示/);
   assert.equal(f.getDocument(), f.snapshot.text);
 });
+
+
+test("图片名称默认隐藏，关闭后恢复，图文节点保留正文", () => {
+  const text = '- ![图片名称.png](图片名称.png)\n- ![[另一张.png]]\n- 正文说明 ![图片名称.png](图片名称.png)';
+  const { root } = markdownTree(text, "文件");
+  const original = JSON.stringify(root);
+  const hidden = layoutTree(root);
+  assert.deepEqual(hidden.nodes[1].lines, []);
+  assert.deepEqual(hidden.nodes[2].lines, []);
+  assert.deepEqual(hidden.nodes[3].lines, ["正文说明"]);
+  const shown = layoutTree(root, new Set(), false);
+  assert.deepEqual(shown.nodes[1].lines, ["图片名称.png"]);
+  assert.deepEqual(shown.nodes[2].lines, ["另一张.png"]);
+  assert.ok(hidden.nodes[1].height < shown.nodes[1].height);
+  assert.equal(JSON.stringify(root), original);
+});

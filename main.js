@@ -17,6 +17,7 @@ const DEFAULT_SETTINGS = {
   renameImages: true,
   cleanupImages: true,
   hideMode: "images",
+  hideImageNames: true,
   extensionColors: "md=#61afef\npdf=#e06c75\ncanvas=#c678dd",
   assistantFolder: "90-附件/Ai助手",
   aiScope: "all",
@@ -31,6 +32,7 @@ class NoteCompanion extends Plugin {
     const stored = await this.loadData();
     this.settings = { ...DEFAULT_SETTINGS, ...(stored || {}) };
     if (!["zh", "en"].includes(this.settings.language)) this.settings.language = "zh";
+    if (typeof this.settings.hideImageNames !== "boolean") this.settings.hideImageNames = true;
     this.localizedCommands = [];
     this.lastNoteFile = this.app.workspace.getActiveFile();
     this.registerEvent(this.app.workspace.on("file-open", file => {
@@ -155,6 +157,7 @@ class NoteCompanion extends Plugin {
   async saveSettings() {
     await this.saveData(this.settings);
     this.applyExplorerStyle();
+    for (const leaf of this.app.workspace.getLeavesOfType(MINDMAP_VIEW_TYPE)) leaf.view.draw();
   }
 
   applyExplorerStyle() {
@@ -170,6 +173,10 @@ class NoteCompanion extends Plugin {
     }
     for (const rule of colorRules(this.settings.extensionColors)) {
       rules.push(`${explorer} .nav-file-title[data-path$=".${rule.extension}" i] .nav-file-title-content { color: ${rule.color} !important; }`);
+    }
+    if (this.settings.hideImageNames !== false) {
+      const imageNode = '.workspace-leaf-content[data-type="canvas"] .canvas-node:has(.canvas-node-content.image-embed, .canvas-node-content > .image-embed, .canvas-node-content > img)';
+      rules.push(`${imageNode} .canvas-node-label { display: none !important; }`);
     }
     this.styleElement.textContent = rules.join("\n");
   }
@@ -447,6 +454,12 @@ class CompanionSettings extends PluginSettingTab {
           settings.hideMode = value;
           await plugin.saveSettings();
         }));
+    new Setting(containerEl).setName("隐藏图片名称")
+      .setDesc("隐藏 Canvas 图片标签和思维导图图片名称，默认开启。")
+      .addToggle(toggle => toggle.setValue(settings.hideImageNames).onChange(async value => {
+        settings.hideImageNames = value;
+        await plugin.saveSettings();
+      }));
     const colors = new Setting(containerEl).setName("按后缀设置文件名颜色")
       .setDesc("每行一条，例如 pdf=#e06c75。留空可关闭配色。");
     let colorInput;

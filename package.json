@@ -1,6 +1,6 @@
 {
   "name": "obsidian-note-companion",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "private": true,
   "description": "图片管理与使用 Markdown 记忆的只读笔记 AI 助手",

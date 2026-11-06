@@ -1,6 +1,8 @@
 "use strict";
 
 const ENGLISH = {
+  "隐藏图片名称": "Hide image names",
+  "隐藏 Canvas 图片标签和思维导图图片名称，默认开启。": "Hide Canvas image labels and mind map image names. Enabled by default.",
   "新增节点无法显示，请检查原文中未闭合的代码块或节点数量限制。": "The new node cannot be displayed. Check for unclosed code fences or the node limit.",
   "子节点": "Child",
   "同级节点": "Sibling",

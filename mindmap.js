@@ -40,7 +40,10 @@ function markdownTree(markdown, title, limit = 1500) {
     if (!label && !media.images.length) return null;
     if (count >= limit) { truncated = true; return null; }
     const node = { id: String(count++), label, children: [], source };
-    if (media.images.length) node.images = media.images;
+    if (media.images.length) {
+      node.images = media.images;
+      node.textLabel = plainLabel(media.text);
+    }
     parent.children.push(node);
     return node;
   };
@@ -166,11 +169,14 @@ function wrapLabel(label) {
   return lines;
 }
 
-function layoutTree(root, collapsed = new Set()) {
+function layoutTree(root, collapsed = new Set(), hideImageNames = true) {
   const sizes = new Map();
   const columns = [];
   const measure = (node, depth) => {
-    const lines = node.label ? wrapLabel(node.label) : [];
+    const label = node.images?.length
+      ? (hideImageNames ? node.textLabel ?? "" : node.label || node.images.map(image => image.alt || image.target.split("/").pop()).join(" "))
+      : node.label;
+    const lines = label ? wrapLabel(label) : [];
     const textWidth = Math.max(0, ...lines.map(line => Array.from(line)
       .reduce((total, character) => total + (character.charCodeAt(0) <= 255 ? 7 : 14), 0))) + 28;
     const thumbnails = (node.images || []).map(image => {
@@ -401,7 +407,7 @@ class MindMapView extends ItemView {
   draw() {
     if (!this.tree) return;
     this.prepareImages();
-    this.layout = layoutTree(this.tree.root, this.collapsed);
+    this.layout = layoutTree(this.tree.root, this.collapsed, this.plugin.settings?.hideImageNames !== false);
     this.layer.replaceChildren();
     for (const edge of this.layout.edges) {
       const x1 = edge.parent.x + edge.parent.width;
